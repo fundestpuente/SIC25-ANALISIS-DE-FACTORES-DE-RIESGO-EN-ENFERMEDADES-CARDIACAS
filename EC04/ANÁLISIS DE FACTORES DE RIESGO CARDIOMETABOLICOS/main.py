@@ -2,7 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 from src.data_preprocessing import *
-
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 def main():
       # Carpeta donde está este script
@@ -83,10 +84,152 @@ def main():
     print(risk_by_age)
 
 
+    print("\nANÁLISIS DE ANTECEDENTES FAMILIARES MEDIANTE EL DIABETES RISK SCORE: ")
+    # Mediana y Media del Riesgo Score por Antecedentes
+    family_history_analysis = df.groupby('Family History')['Diabetes Risk Score'].agg(
+        ['mean', 'median', 'std']
+    )
+    # (0=No Historial, 1=Con Historial)
+    family_history_analysis.index = ['No Historial Familiar (0)', 'Con Historial Familiar (1)']
+    print(family_history_analysis.round(2))
+    # Cálculo de la Tasa de Riesgo Aumentada
+    mean_risk_no_diabetes = family_history_analysis.loc['No Historial Familiar (0)', 'mean']
+    mean_risk_with_diabetes = family_history_analysis.loc['Con Historial Familiar (1)', 'mean']
+    risk_increase = ((mean_risk_with_diabetes - mean_risk_no_diabetes) / mean_risk_no_diabetes) * 100
+    print(f"\nEl riesgo promedio de diabetes (nivel de amenaza) es un {risk_increase:.1f}% mayor en la población con antecedentes familiares.")
+
+
+    # ACTIVIDAD FISICA Y RIESGO DE DIABETES
+    print("\nRELACIÓN ENTRE RIESGO DE DIABETES Y ACTIVIDAD FÍSICA")
+    df['Activity Level'] = pd.qcut(
+    df['Physical Activity'], 
+    q=3, 
+    labels=['Baja', 'Media', 'Alta'], 
+    duplicates='drop'
+    )
+
+    #CÁLCULO DE MÉTRICAS CLAVE POR NIVEL DE ACTIVIDAD
+    activity_analysis = df.groupby('Activity Level', observed=True).agg(
+        # Riesgo Promedio (Mean_Risk)
+        Riesgo_Promedio=('Diabetes Risk Score', 'mean'),
+        # IMC Promedio (Mean_IMC)
+        IMC_Promedio=('Body Mass Index', 'mean'),
+        # Prevalencia de Diabetes (calculando la media de la columna binaria 0/1)
+        Prevalencia_Diabetes=('Diabetes Status', 'mean')
+    )
+
+    # Convierte la prevalencia a un porcentaje legible
+    activity_analysis['Prevalencia_Diabetes (%)'] = (activity_analysis['Prevalencia_Diabetes'] * 100).round(1)
+    # Redondea y presenta el resultado final
+    activity_analysis = activity_analysis.drop(columns=['Prevalencia_Diabetes']).round(2)
+    print(activity_analysis)
+    # Análisis de la Brecha de Riesgo: Cuantificar cuánto peor es el grupo 'Baja' que el grupo 'Alta'
+    risk_low = activity_analysis.loc['Baja', 'Riesgo_Promedio']
+    risk_high = activity_analysis.loc['Alta', 'Riesgo_Promedio']
+    risk_difference_percent = ((risk_low - risk_high) / risk_high) * 100
+    print(f"\n *El grupo de Baja Actividad tiene un riesgo promedio de diabetes (nivel de amenaza) un {risk_difference_percent:.1f}% mayor que el de Alta Actividad.")
+        
+
+    print("\nPREVALENCIA DE DIABETES (%) POR ESTADO DE PESO (IMC)")
+    # 1. Definir grupos de IMC
+    bins_imc = [df['Body Mass Index'].min(), 25, 30, df['Body Mass Index'].max()]
+    labels_imc = ['Bajo/Normal (<25)', 'Sobrepeso (25-30)', 'Obeso (>30)']
+    df['IMC_Category'] = pd.cut(df['Body Mass Index'], bins=bins_imc, labels=labels_imc, right=False, include_lowest=True)
+    # 2. Calcular la Prevalencia de Diabetes
+    prevalence_analysis = df.groupby('IMC_Category', observed=True)['Diabetes Status'].mean().sort_values()
+    # 3. Convertir a Porcentaje y Formatear
+    prevalence_percent = (prevalence_analysis * 100).round(2)
+    prevalence_percent.name = 'Prevalencia de Diabetes (%)'
+
+    print(prevalence_percent)
+
+    print("\n" + "="*80)
+    print(" ANÁLISIS COMPARATIVO DE ESTILOS DE VIDA")
+    print("="*80)
+
+     # 1. ANÁLISIS DE ACTIVIDAD FÍSICA Y RIESGO DE DIABETES
+    print("\n RIESGO DE DIABETES POR NIVEL DE ACTIVIDAD FÍSICA")
+    df['Actividad_Fisica_Grupo'] = pd.cut(
+        df['Physical Activity'],
+        bins=[0, 60, 150, 300, 1000],
+        labels=['Sedentario (<60min)', 'Bajo (60-150min)', 'Moderado (150-300min)', 'Alto (>300min)']
+    )
+    activity_risk = df.groupby('Actividad_Fisica_Grupo', observed=True)['Diabetes Risk Score'].agg(['mean', 'median', 'std', 'count'])
+    print(activity_risk.round(2))
+
+
+    # Diferencia entre sedentario y alto
+    risk_sedentario = activity_risk.loc['Sedentario (<60min)', 'mean']
+    risk_alto = activity_risk.loc['Alto (>300min)', 'mean']
+    diff_percent = ((risk_sedentario - risk_alto) / risk_alto) * 100
+    print(f"\n Insight: El grupo sedentario tiene un riesgo {diff_percent:.1f}% mayor que el grupo de alta actividad.")
+
+ # 2. ANÁLISIS DE TIEMPO DE PANTALLA
+    print("\nRIESGO DE DIABETES POR TIEMPO DE PANTALLA DIARIO")
+    df['Screen_Time_Grupo'] = pd.cut(
+        df['Screen Time'],
+        bins=[0, 2, 4, 6, 24],
+        labels=['Bajo (<2h)', 'Moderado (2-4h)', 'Alto (4-6h)', 'Muy Alto (>6h)']
+    )
+    screen_risk = df.groupby('Screen_Time_Grupo', observed=True)['Diabetes Risk Score'].agg(['mean', 'median', 'count'])
+    print(screen_risk.round(2))
+# Correlación pantalla-riesgo
+    corr_screen = df['Screen Time'].corr(df['Diabetes Risk Score'])
+    print(f"\n Correlación entre tiempo de pantalla y riesgo: {corr_screen:.3f}") 
+
+
+ # 3. ANÁLISIS DE CALIDAD DE DIETA
+    print("\n RIESGO DE DIABETES POR CALIDAD DE DIETA")
+    df['Diet_Grupo'] = pd.cut(
+        df['Diet'],
+        bins=[0, 3, 6, 8, 10],
+        labels=['Mala (0-3)', 'Regular (3-6)', 'Buena (6-8)', 'Excelente (8-10)']
+    )
+    diet_risk = df.groupby('Diet_Grupo', observed=True)['Diabetes Risk Score'].agg(['mean', 'median', 'count'])
+    print(diet_risk.round(2))
+
+
+  # 4. ANÁLISIS DE HORAS DE SUEÑO
+    print("\n RIESGO DE DIABETES POR HORAS DE SUEÑO")
+    df['Sleep_Grupo'] = pd.cut(
+        df['Sleep Hours'],
+        bins=[0, 6, 7, 8, 24],
+        labels=['Poco (<6h)', 'Subóptimo (6-7h)', 'Óptimo (7-8h)', 'Excesivo (>8h)']
+    )
+    sleep_risk = df.groupby('Sleep_Grupo', observed=True)['Diabetes Risk Score'].agg(['mean', 'median', 'count'])
+    print(sleep_risk.round(2))
+
+    # 5. ANÁLISIS DE CONSUMO DE ALCOHOL
+    print("\n RIESGO DE DIABETES POR CONSUMO DE ALCOHOL SEMANAL")
+    df['Alcohol_Grupo'] = pd.cut(
+        df['Alcohol per Week'],
+        bins=[-1, 0, 5, 10, 100],
+        labels=['Abstinente (0)', 'Bajo (1-5)', 'Moderado (6-10)', 'Alto (>10)']
+    )
+    alcohol_risk = df.groupby('Alcohol_Grupo', observed=True)['Diabetes Risk Score'].agg(['mean', 'median', 'count'])
+    print(alcohol_risk.round(2))
+
+ # 6. ANÁLISIS COMBINADO: MEJORES Y PEORES HÁBITOS
+    print("\nCOMPARACIÓN: MEJORES vs PEORES HÁBITOS DE VIDA")
+    
+    # Definicion de grupos de hábitos saludables
+    df['Habitos_Saludables'] = (
+        (df['Physical Activity'] >= 150) &
+        (df['Diet'] >= 6) &
+        (df['Sleep Hours'] >= 7) & (df['Sleep Hours'] <= 8) &
+        (df['Screen Time'] <= 4)
+    ).astype(int)
+    
+    habitos_comparison = df.groupby('Habitos_Saludables')['Diabetes Risk Score'].agg(['mean', 'median', 'std', 'count'])
+    habitos_comparison.index = ['Hábitos No Saludables', 'Hábitos Saludables']
+    print(habitos_comparison.round(2))
+    
+    risk_diff = habitos_comparison.loc['Hábitos No Saludables', 'mean'] - habitos_comparison.loc['Hábitos Saludables', 'mean']
+    print(f"\n Insight: Tener hábitos saludables reduce el riesgo en {risk_diff:.2f} puntos en promedio.")
 
     
 
-
+    
 
 if __name__ == "__main__":
     main()
