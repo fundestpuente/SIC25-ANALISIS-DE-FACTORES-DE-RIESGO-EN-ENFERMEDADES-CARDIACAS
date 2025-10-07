@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def main():
-      # Carpeta donde está este script
+    # Carpeta donde está este script
     current_dir = os.path.dirname(os.path.abspath(__file__))
     
     # Rutas seguras
@@ -228,71 +228,6 @@ def main():
     risk_diff = habitos_comparison.loc['Hábitos No Saludables', 'mean'] - habitos_comparison.loc['Hábitos Saludables', 'mean']
     print(f"\n Insight: Tener hábitos saludables reduce el riesgo en {risk_diff:.2f} puntos en promedio.")
 
-    
-
-    
-
-    
-
-    print("\nANÁLISIS DE ANTECEDENTES FAMILIARES MEDIANTE EL DIABETES RISK SCORE: ")
-    # Mediana y Media del Riesgo Score por Antecedentes
-    family_history_analysis = df.groupby('Family History')['Diabetes Risk Score'].agg(
-        ['mean', 'median', 'std']
-    )
-    # Renombrar para mayor claridad (0=No Historial, 1=Con Historial)
-    family_history_analysis.index = ['No Historial Familiar (0)', 'Con Historial Familiar (1)']
-    print(family_history_analysis.round(2))
-    # Cálculo de la Tasa de Riesgo Aumentada
-    mean_risk_no_diabetes = family_history_analysis.loc['No Historial Familiar (0)', 'mean']
-    mean_risk_with_diabetes = family_history_analysis.loc['Con Historial Familiar (1)', 'mean']
-    risk_increase = ((mean_risk_with_diabetes - mean_risk_no_diabetes) / mean_risk_no_diabetes) * 100
-    print(f"\nEl riesgo promedio de diabetes (nivel de amenaza) es un {risk_increase:.1f}% mayor en la población con antecedentes familiares.")
-
-
-
-    # ACTIVIDAD FISICA Y RIESGO DE DIABETES
-    print("\nRELACIÓN ENTRE RIESGO DE DIABETES Y ACTIVIDAD FÍSICA")
-    df['Activity Level'] = pd.qcut(
-    df['Physical Activity'], 
-    q=3, 
-    labels=['Baja', 'Media', 'Alta'], 
-    duplicates='drop'
-    )
-
-    #CÁLCULO DE MÉTRICAS CLAVE POR NIVEL DE ACTIVIDAD
-    activity_analysis = df.groupby('Activity Level', observed=True).agg(
-        # Riesgo Promedio (Mean_Risk)
-        Riesgo_Promedio=('Diabetes Risk Score', 'mean'),
-        # IMC Promedio (Mean_IMC)
-        IMC_Promedio=('Body Mass Index', 'mean'),
-        # Prevalencia de Diabetes (calculando la media de la columna binaria 0/1)
-        Prevalencia_Diabetes=('Diabetes Status', 'mean')
-    )
-
-    # Convierte la prevalencia a un porcentaje legible
-    activity_analysis['Prevalencia_Diabetes (%)'] = (activity_analysis['Prevalencia_Diabetes'] * 100).round(1)
-    # Redondea y presenta el resultado final
-    activity_analysis = activity_analysis.drop(columns=['Prevalencia_Diabetes']).round(2)
-    print(activity_analysis)
-    # Análisis de la Brecha de Riesgo: Cuantificar cuánto peor es el grupo 'Baja' que el grupo 'Alta'
-    risk_low = activity_analysis.loc['Baja', 'Riesgo_Promedio']
-    risk_high = activity_analysis.loc['Alta', 'Riesgo_Promedio']
-    risk_difference_percent = ((risk_low - risk_high) / risk_high) * 100
-    print(f"\n *El grupo de Baja Actividad tiene un riesgo promedio de diabetes (nivel de amenaza) un {risk_difference_percent:.1f}% mayor que el de Alta Actividad.")
-        
-
-    print("\nPREVALENCIA DE DIABETES (%) POR ESTADO DE PESO (IMC)")
-    # 1. Definir grupos de IMC
-    bins_imc = [df['Body Mass Index'].min(), 25, 30, df['Body Mass Index'].max()]
-    labels_imc = ['Bajo/Normal (<25)', 'Sobrepeso (25-30)', 'Obeso (>30)']
-    df['IMC_Category'] = pd.cut(df['Body Mass Index'], bins=bins_imc, labels=labels_imc, right=False, include_lowest=True)
-    # 2. Calcular la Prevalencia de Diabetes
-    prevalence_analysis = df.groupby('IMC_Category', observed=True)['Diabetes Status'].mean().sort_values()
-    # 3. Convertir a Porcentaje y Formatear
-    prevalence_percent = (prevalence_analysis * 100).round(2)
-    prevalence_percent.name = 'Prevalencia de Diabetes (%)'
-
-    print(prevalence_percent)
 
 #VISUALIZACIONES DE LOS GRAFICOS
 #CORELACION ENTRE IMC Y RIESGO DE DIABETES
