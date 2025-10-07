@@ -355,5 +355,84 @@ def main():
 
 
     
+    
+
+    #GRÁFICOS
+
+    print("\n📊 MOSTRANDO GRÁFICOS...")
+
+    # ===  DISTRIBUCIÓN DEL PUNTAJE DE RIESGO ===
+    print("\nDistribución del Puntaje de Riesgo de Diabetes")
+
+    fig, axs = plt.subplots(2, 2, figsize=(12, 8))
+    fig.suptitle("Distribución del Puntaje de Riesgo de Diabetes", fontsize=15, fontweight="bold")
+
+    # 1. Distribución general del puntaje de riesgo
+    sns.histplot(df["Diabetes Risk Score"], kde=True, bins=20, color="royalblue", ax=axs[0,0])
+    axs[0,0].set_title("Distribución del Puntaje de Riesgo")
+    axs[0,0].set_xlabel("Puntaje de Riesgo")
+    axs[0,0].set_ylabel("Frecuencia")
+
+    # 2. Puntaje de riesgo por grupo de edad
+    sns.boxplot(data=df, x="Age Group", y="Diabetes Risk Score", palette="Set2", ax=axs[0,1])
+    axs[0,1].set_title("Puntaje de Riesgo por Grupo de Edad")
+    axs[0,1].set_xlabel("Grupo de Edad")
+    axs[0,1].set_ylabel("Puntaje de Riesgo")
+    axs[0,1].tick_params(axis='x', rotation=30)
+
+    # 3. Relación IMC vs Riesgo
+    sns.scatterplot(data=df, x="Body Mass Index", y="Diabetes Risk Score", hue="Gender", alpha=0.7, ax=axs[1,0])
+    sns.regplot(data=df, x="Body Mass Index", y="Diabetes Risk Score", scatter=False, color="red", ax=axs[1,0])
+    axs[1,0].set_title("IMC vs Puntaje de Riesgo")
+    axs[1,0].set_xlabel("IMC")
+    axs[1,0].set_ylabel("Riesgo")
+
+    # 4. Actividad física vs Riesgo promedio
+    sns.barplot(data=df, x="Activity Level", y="Diabetes Risk Score", estimator=np.mean, palette="viridis", ax=axs[1,1])
+    axs[1,1].set_title("Riesgo Promedio por Nivel de Actividad")
+    axs[1,1].set_xlabel("Nivel de Actividad Física")
+    axs[1,1].set_ylabel("Riesgo Promedio")
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.show()
+    print("✅ DISTRIBUCIÓN DEL PUNTAJE DE RIESGO completado: gráficos mostrados correctamente.")
+
+    # === 👥FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES ===
+    print("\n🔹Factores Demográficos y Control de Diabetes")
+
+    fig, axs = plt.subplots(2, 2, figsize=(12, 8))
+    fig.suptitle("Factores Demográficos y Control de Diabetes", fontsize=15, fontweight="bold")
+
+    # 1. HbA1c por nivel de ingreso
+    sns.boxplot(data=df, x="Income Level", y="HbA1c", palette="coolwarm", ax=axs[0,0])
+    axs[0,0].set_title("HbA1c por Nivel de Ingreso")
+    axs[0,0].set_xlabel("Nivel de Ingreso")
+    axs[0,0].set_ylabel("HbA1c (%)")
+    axs[0,0].tick_params(axis='x', rotation=20)
+
+    # 2. HbA1c promedio por grupo étnico
+    sns.barplot(data=df, x="Ethnicity", y="HbA1c", estimator=np.mean, palette="mako", ax=axs[0,1])
+    axs[0,1].set_title("Promedio de HbA1c por Etnia")
+    axs[0,1].set_xlabel("Etnia")
+    axs[0,1].set_ylabel("HbA1c Promedio (%)")
+    axs[0,1].tick_params(axis='x', rotation=30)
+
+    # 3. Relación Riesgo vs HbA1c
+    sns.scatterplot(data=df, x="Diabetes Risk Score", y="HbA1c", hue="Income Level", alpha=0.7, ax=axs[1,0])
+    sns.regplot(data=df, x="Diabetes Risk Score", y="HbA1c", scatter=False, color="red", ax=axs[1,0])
+    axs[1,0].set_title("Riesgo vs HbA1c")
+    axs[1,0].set_xlabel("Puntaje de Riesgo")
+    axs[1,0].set_ylabel("HbA1c (%)")
+
+    # 4. Heatmap de correlaciones
+    corr_vars = df[['HbA1c', 'Age', 'Body Mass Index', 'Diabetes Risk Score']]
+    sns.heatmap(corr_vars.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=axs[1,1])
+    axs[1,1].set_title("Mapa de Correlación (Factores Principales)")
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.show()
+    print("✅ FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES completado: gráficos mostrados correctamente.")
+
+
 if __name__ == "__main__":
     main()
