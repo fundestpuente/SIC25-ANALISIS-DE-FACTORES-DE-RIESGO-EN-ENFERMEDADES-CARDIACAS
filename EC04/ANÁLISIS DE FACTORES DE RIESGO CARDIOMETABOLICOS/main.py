@@ -293,6 +293,67 @@ def main():
     prevalence_percent.name = 'Prevalencia de Diabetes (%)'
 
     print(prevalence_percent)
+
+#VISUALIZACIONES DE LOS GRAFICOS
+#CORELACION ENTRE IMC Y RIESGO DE DIABETES
+    corr_bmi_risk = df['Body Mass Index'].corr(df['Diabetes Risk Score'])
+    print(f"Coeficiente de correlación de Pearson: {corr_bmi_risk:.3f}")
+
+    # Crear figura con estilo moderno
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    # Scatter plot con color por densidad
+    scatter = ax.scatter(
+        df['Body Mass Index'], 
+        df['Diabetes Risk Score'],
+        c=df['Diabetes Risk Score'],
+        cmap='RdYlGn_r',  # Rojo=alto riesgo, Verde=bajo riesgo
+        s=60,
+        alpha=0.6,
+        edgecolors='white',
+        linewidth=0.5
+    )
+
+    # Línea de regresión
+    z = np.polyfit(df['Body Mass Index'], df['Diabetes Risk Score'], 1)
+    p = np.poly1d(z)
+    x_line = np.linspace(df['Body Mass Index'].min(), df['Body Mass Index'].max(), 100)
+    ax.plot(x_line, p(x_line), 
+            color='#e74c3c', 
+            linewidth=3, 
+            linestyle='--',
+            label=f'Tendencia lineal')
+
+    # Configuración de ejes
+    ax.set_xlabel('Índice de Masa Corporal (IMC)', fontsize=14, fontweight='bold')
+    ax.set_ylabel('Puntuación de Riesgo de Diabetes', fontsize=14, fontweight='bold')
+    ax.set_title(
+        f'Correlación entre IMC y Riesgo de Diabetes\nPearson r = {corr_bmi_risk:.3f}',
+        fontsize=16,
+        fontweight='bold',
+        pad=20
+    )
+
+    # Añadir líneas de referencia para categorías de IMC
+    ax.axvline(x=25, color='orange', linestyle=':', linewidth=2, alpha=0.5, label='Sobrepeso (IMC=25)')
+    ax.axvline(x=30, color='red', linestyle=':', linewidth=2, alpha=0.5, label='Obesidad (IMC=30)')
+
+    # Colorbar
+    cbar = plt.colorbar(scatter, ax=ax)
+    cbar.set_label('Nivel de Riesgo', fontsize=12, fontweight='bold')
+
+    # Leyenda y grid
+    ax.legend(loc='upper left', fontsize=10, framealpha=0.9)
+    ax.grid(True, alpha=0.3, linestyle='--', linewidth=0.5)
+
+    # Mejorar bordes
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+    plt.tight_layout()
+    plt.show()
+
+
     
 if __name__ == "__main__":
     main()
