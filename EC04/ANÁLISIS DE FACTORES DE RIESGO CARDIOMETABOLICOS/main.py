@@ -82,7 +82,7 @@ def main():
                             labels=['<30','30-45','45-60','60-75','75+'])
     risk_by_age = df.groupby('Age Group', observed=True)['Diabetes Risk Score'].mean().round(2)
     print(risk_by_age)
-<<<<<<< HEAD
+
 
 
     print("\nANÁLISIS DE ANTECEDENTES FAMILIARES MEDIANTE EL DIABETES RISK SCORE: ")
@@ -231,7 +231,7 @@ def main():
     
 
     
-=======
+
     
 
     print("\nANÁLISIS DE ANTECEDENTES FAMILIARES MEDIANTE EL DIABETES RISK SCORE: ")
@@ -248,7 +248,7 @@ def main():
     risk_increase = ((mean_risk_with_diabetes - mean_risk_no_diabetes) / mean_risk_no_diabetes) * 100
     print(f"\nEl riesgo promedio de diabetes (nivel de amenaza) es un {risk_increase:.1f}% mayor en la población con antecedentes familiares.")
 
->>>>>>> ad34b26a89491c0a1b2e011a89c4eed314aef32d
+
 
     # ACTIVIDAD FISICA Y RIESGO DE DIABETES
     print("\nRELACIÓN ENTRE RIESGO DE DIABETES Y ACTIVIDAD FÍSICA")
