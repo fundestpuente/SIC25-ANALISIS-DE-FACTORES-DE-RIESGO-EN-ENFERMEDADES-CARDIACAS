@@ -380,12 +380,12 @@ def main():
     axs[0,1].set_ylabel("Puntaje de Riesgo")
     axs[0,1].tick_params(axis='x', rotation=30)
 
-    # 3. Relación IMC vs Riesgo
-    sns.scatterplot(data=df, x="Body Mass Index", y="Diabetes Risk Score", hue="Gender", alpha=0.7, ax=axs[1,0])
-    sns.regplot(data=df, x="Body Mass Index", y="Diabetes Risk Score", scatter=False, color="red", ax=axs[1,0])
-    axs[1,0].set_title("IMC vs Puntaje de Riesgo")
-    axs[1,0].set_xlabel("IMC")
-    axs[1,0].set_ylabel("Riesgo")
+    # 3. Riesgo de Diabetes vs HbA1c
+    sns.scatterplot(data=df, x="Diabetes Risk Score", y="HbA1c", hue="Gender", alpha=0.7, ax=axs[1,0])
+    sns.regplot(data=df, x="Diabetes Risk Score", y="HbA1c", scatter=False, color="red", ax=axs[1,0])
+    axs[1,0].set_title("Riesgo de Diabetes vs HbA1c")
+    axs[1,0].set_xlabel("Puntaje de Riesgo")
+    axs[1,0].set_ylabel("HbA1c (%)")
 
     # 4. Actividad física vs Riesgo promedio
     sns.barplot(data=df, x="Activity Level", y="Diabetes Risk Score", estimator=np.mean, palette="viridis", ax=axs[1,1])
