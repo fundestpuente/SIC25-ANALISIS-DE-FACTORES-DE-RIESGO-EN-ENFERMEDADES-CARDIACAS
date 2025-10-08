@@ -20,19 +20,19 @@ def main():
         print("❌ ERROR: No se encontró el archivo CSV en la ruta indicada.")
         print("Por favor verifica que 'diabetes_dataset.csv' esté dentro de la carpeta 'data'.")
         return  # Salir del script si no encuentra el archivo
-
+ 
     # Si existe archivo procesado, cargarlo
     if os.path.exists(processed_data_path):
-        print("✅ Archivo procesado encontrado. Cargando dataset existente...")
+        print(" Archivo procesado encontrado. Cargando dataset existente...")
         df = pd.read_csv(processed_data_path)
     else:
-        print("⚙️ Archivo procesado no encontrado. Ejecutando pipeline de preprocesamiento...")
+        print(" Archivo procesado no encontrado. Ejecutando pipeline de preprocesamiento...")
         df = preprocesing_data(raw_data_path, processed_data_path)
-        print("💾 Dataset procesado guardado en:", processed_data_path)
+        print(" Dataset procesado guardado en:", processed_data_path)
 
-    
-
-
+    print("Columnas en el DataFrame final:")
+    print(df.columns.tolist())
+ 
     # Show preview of the data
     print("\nData preview:")
     print(df.head())
@@ -365,6 +365,65 @@ def main():
     plt.show()
     print("✅ FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES completado: gráficos mostrados correctamente.")
 
+
+    # === MAPA DE CALOR DE CORRELACIÓN DE FACTORES CLÍNICOS ===
+    print("\nMapa de Calor de Correlación de Factores Clínicos")
+    clinical_cols = [
+        'Body Mass Index',
+        'Waist to Hip Ratio',
+        'HbA1c',
+        'Glucosa Ayunas',
+        'Glucosa Postprandial',
+        'Colesterol Total',
+        'Colesterol HDL',
+        'Colesterol LDL',
+        'Presión Sistólica',
+        'Presión Diastólica',
+        'Diabetes Risk Score'
+    ]
+
+    existing_cols = [col for col in clinical_cols if col in df.columns]
+
+    if not existing_cols:
+        print("Ninguna columna clínica encontrada para el heatmap.")
+    else:
+        print("Columnas usadas para el mapa de calor:")
+        print(existing_cols)
+
+        df_heatmap = df[existing_cols].copy()
+        # Convertir a numérico 
+        for col in df_heatmap.columns:
+            df_heatmap[col] = pd.to_numeric(df_heatmap[col], errors='coerce')
+
+        corr_matrix = df_heatmap.corr()
+
+
+        # Visualización del heatmap
+        plt.figure(figsize=(12, 10))
+        sns.heatmap(
+            corr_matrix,
+            annot=True,
+            fmt=".2f",
+            cmap='coolwarm',
+            center=0,
+            vmin=-1,
+            vmax=1,
+            linewidths=0.5,
+            linecolor='white',
+            cbar_kws={"shrink": 0.8, "label": "Coeficiente de Correlación (r)"},
+            annot_kws={"size": 9, "weight": "bold", "color": "black"}
+        )
+
+        plt.title(
+            ' Mapa de Calor: Correlación entre Factores Clínicos',
+            fontsize=15,
+            fontweight='bold',
+            pad=20
+        )
+        plt.xticks(rotation=45, ha='right', fontsize=9)
+        plt.yticks(rotation=0, fontsize=9)
+        plt.tight_layout()
+        plt.show()
 
 if __name__ == "__main__":
     main()

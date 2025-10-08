@@ -41,9 +41,7 @@ def filter_relevant_columns(df: pd.DataFrame) -> pd.DataFrame:
         'waist_to_hip_ratio': 'Waist to Hip Ratio',                # Body fat distribution, risk indicator
         'diabetes_risk_score': 'Diabetes Risk Score',              # Overall understandable risk summary
         'diagnosed_diabetes': 'Diabetes Status',                   # Current diabetes status
-
         'diagnosed_diabetes': 'Diabetes Status',                   # Current diabetes status
-
         'income_level': 'Income Level',                            # Socioeconomic factor related to health and diet quality
         'employment_status': 'Employment Status',                  # Reflects lifestyle and access to healthcare
         'hba1c': 'HbA1c', 
