@@ -358,12 +358,9 @@ def main():
     axs[1,0].set_title("Riesgo vs HbA1c")
     axs[1,0].set_xlabel("Puntaje de Riesgo")
     axs[1,0].set_ylabel("HbA1c (%)")
-
-    # 4. Heatmap de correlaciones
-    corr_vars = df[['HbA1c', 'Age', 'Body Mass Index', 'Diabetes Risk Score']]
-    sns.heatmap(corr_vars.corr(), annot=True, cmap="coolwarm", fmt=".2f", ax=axs[1,1])
-    axs[1,1].set_title("Mapa de Correlación (Factores Principales)")
-
+    
+    axs[1,1].axis('off')
+    
     plt.tight_layout(rect=[0, 0, 1, 0.96])
     plt.show()
     print("✅ FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES completado: gráficos mostrados correctamente.")
