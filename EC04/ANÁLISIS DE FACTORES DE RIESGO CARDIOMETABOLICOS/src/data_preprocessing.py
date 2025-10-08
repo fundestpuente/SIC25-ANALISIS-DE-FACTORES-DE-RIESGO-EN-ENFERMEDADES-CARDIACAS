@@ -46,7 +46,14 @@ def filter_relevant_columns(df: pd.DataFrame) -> pd.DataFrame:
 
         'income_level': 'Income Level',                            # Socioeconomic factor related to health and diet quality
         'employment_status': 'Employment Status',                  # Reflects lifestyle and access to healthcare
-        'hba1c': 'HbA1c',                                          # Glycated hemoglobin, key indicator of diabetes control
+        'hba1c': 'HbA1c', 
+        'systolic_bp': 'Presión Sistólica',       
+        'diastolic_bp': 'Presión Diastólica',     
+        'cholesterol_total': 'Colesterol Total',  
+        'hdl_cholesterol': 'Colesterol HDL',      
+        'ldl_cholesterol': 'Colesterol LDL',      
+        'glucose_fasting': 'Glucosa Ayunas',      
+        'glucose_postprandial': 'Glucosa Postprandial'    
     }
 
     df_clean = df[list(columns_mapping.keys())].copy()
