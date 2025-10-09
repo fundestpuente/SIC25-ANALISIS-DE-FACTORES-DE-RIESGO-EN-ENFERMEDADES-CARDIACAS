@@ -1,61 +1,65 @@
-# 📚 Repositorio Oficial – Proyectos Módulo de Python  
-**Samsung Innovation Campus – Ecuador 2025 (Secciones 03 y 04)**
+# 📌 ANALISIS DE FACTORES DE RIESGO EN LA DIABETES
 
-Bienvenidos al repositorio oficial donde se almacenan los proyectos correspondientes a la **primera entrega del Módulo de Python** del programa **Samsung Innovation Campus (SIC) – Samsung University Campus, Ecuador 2025**.
+**Curso:** Samsung Innovation Campus – Módulo de Python (Ecuador 2025)
 
-Este repositorio está organizado en carpetas por Secciones y por grupos de proyecto. En total existen **14 grupos**, cada uno con su carpeta asignada. Cada grupo debe subir su código en la carpeta correspondiente y mantener la estructura de forma ordenada.
+**Seccion:** Ecuador04
 
 ---
 
-## 📂 Organización del Repositorio
+## 👥 Integrantes del Grupo
+- Angie Alfonso
+- Christian Zavala
+- Fernando Alvarez 
+- Fiorella Quijana
+- Joseph Carrera
+---
 
-```plaintext
-/
-├── ecuador03/
-│   ├── proyecto-01-nombre/
-│   ├── proyecto-02-nombre/
-│   └── ...
-├── ecuador04/
-│   ├── proyecto-01-nombre/
-│   ├── proyecto-02-nombre/
-│   └── ...
-└── README.md
+## 📝 Descripción del Proyecto
 
+El proyecto analiza datos médicos y de estilo de vida para identificar factores de riesgo asociados a la diabetes.Resuelve el problema de la falta de información y comprensión sobre cómo ciertos hábitos y características personales pueden contribuir a la aparición de la enfermedad. Su objetivo principal es facilitar la detección temprana de riesgos y orientar estrategias preventivas basadas en evidencia. Los beneficiarios son personas interesadas en prevenir la diabetes, profesionales de la salud y comunidades con riesgo elevado de esta enfermedad.
+
+---
+
+## ⚙️ Instrucciones de Instalación y Ejecución
+
+### Requisitos
+- Python 3.9+ (recomendado)
+- Git
+
+### Pasos
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/fundestpuente/SIC25-ANALISIS-DE-FACTORES-DE-RIESGO-EN-ENFERMEDADES-CARDIACAS.git
+   ```
+
+2. Actualizar pip e instalar dependencias:
+   ```bash
+   pip install --upgrade pip
+   pip install -r requirements.txt
+   ```
+
+3. Ejecutar la aplicación:
+   ```bash
+   python main.py
+   ```
+
+---
+
+## 📂 Estructura del Código 
 ```
----
-
-## 📝 Instrucciones para los Grupos
-
-Cada grupo debe:
-
-1. **Subir su código únicamente a la carpeta de su proyecto.**
-   - No modificar archivos o carpetas de otros grupos.  
-   - No cambiar la estructura principal del repositorio.  
-
-2. **Mantener un `README.md` dentro de su carpeta de proyecto.**
-   - Cada carpeta de proyecto ya incluye un archivo `README.md` base de ejemplo.  
-   - Este archivo debe ser editado por cada grupo con la información específica de su proyecto.  
-
-3. **Contenido mínimo del `README.md` de cada proyecto:**
-   - 📌 **Nombre del proyecto**  
-   - 👥 **Integrantes del grupo**  
-   - 📝 **Descripción del proyecto**  
-   - ⚙️ **Instrucciones de instalación y ejecución**  
-   - 📂 **Estructura del código**   
-   - ✅ **Herramientas implementadas**  
+SIC25-ANALISIS-DE-FACTORES-DE-RIESGO-EN-ENFERMEDADES-CARDIACAS/
+│
+├── main.py  
+├── README.md     
+├── requirements.txt
+├── src/
+│   ├── data_preprocessing.py
+├── data/
+└── .gitignore
+```
 
 ---
 
-## ✅ Buenas Prácticas
-
-- Usar **mensajes claros en los commits** (ejemplo: `Agrega función de login` en lugar de `arreglo`).
-- Trabajar siempre en **su carpeta asignada**.  
-- Subir el código de manera organizada y documentada.   
-
----
-
-## 📢 Importante
-
-Este repositorio representa el esfuerzo de cada grupo en la primera entrega del módulo de **Python**. La organización y la claridad en los proyectos será tomada en cuenta en la evaluación.  
-
-¡Mucho éxito a todos los equipos! 🚀  
+## ✅ Herramientas Implementadas
+- **Lenguaje:** Python 3.x
+- **Librerías principales:** pandas, numpy, matplotlib y seaborn
