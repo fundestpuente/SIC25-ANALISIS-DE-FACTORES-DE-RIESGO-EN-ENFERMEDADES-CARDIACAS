@@ -230,6 +230,7 @@ def main():
 
 
 #VISUALIZACIONES DE LOS GRAFICOS
+    plot_path = os.path.join(current_dir, "data", "plots")
 #CORELACION ENTRE IMC Y RIESGO DE DIABETES
     corr_bmi_risk = df['Body Mass Index'].corr(df['Diabetes Risk Score'])
     print(f"Coeficiente de correlación de Pearson: {corr_bmi_risk:.3f}")
@@ -286,6 +287,7 @@ def main():
     ax.spines['right'].set_visible(False)
 
     plt.tight_layout()
+    plt.savefig(os.path.join(plot_path, "CORELACION_ENTRE_IMC_Y_RIESGO_DE_DIABETES.png"))
     plt.show()
 
 
@@ -329,7 +331,9 @@ def main():
     axs[1,1].set_ylabel("Riesgo Promedio")
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(os.path.join(plot_path, "Distribucion_del_Puntaje_de_Riesgo_de_Diabetes.png"))
     plt.show()
+
     print("✅ DISTRIBUCIÓN DEL PUNTAJE DE RIESGO completado: gráficos mostrados correctamente.")
 
     # === 👥FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES ===
@@ -362,6 +366,7 @@ def main():
     axs[1,1].axis('off')
     
     plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(os.path.join(plot_path, "Factores_Demograficos_y_Control_de_Diabetes.png"))
     plt.show()
     print("✅ FACTORES DEMOGRÁFICOS Y CONTROL DE DIABETES completado: gráficos mostrados correctamente.")
 
@@ -423,6 +428,7 @@ def main():
         plt.xticks(rotation=45, ha='right', fontsize=9)
         plt.yticks(rotation=0, fontsize=9)
         plt.tight_layout()
+        plt.savefig(os.path.join(plot_path, "Correlación_entre_Factores_Clinicos.png"))
         plt.show()
             # === RIESGO DE DIABETES SEGÚN ESTILO DE VIDA ===
     print("\nVisualizando riesgo de diabetes según estilo de vida")
@@ -446,6 +452,7 @@ def main():
     )
     plt.grid(axis='y', linestyle='--', alpha=0.5)
     plt.tight_layout()
+    plt.savefig(os.path.join(plot_path, "Riesgo_de_Padecer_Diabetes_segun_Estilo_de_Vida.png"))
     plt.show()
 
     # === ANÁLISIS DETALLADO: CADA HÁBITO Y SU RELACIÓN CON EL RIESGO ===
@@ -538,6 +545,7 @@ def main():
     axes[1,2].axis('off')
 
     plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig(os.path.join(plot_path, "Relacion_entre_Estilo_de_Vida_y_Riesgo_de_Diabetes.png"))
     plt.show()
 
 if __name__ == "__main__":
