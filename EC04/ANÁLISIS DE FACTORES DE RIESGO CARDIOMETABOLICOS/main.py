@@ -448,6 +448,97 @@ def main():
     plt.tight_layout()
     plt.show()
 
+    # === ANÁLISIS DETALLADO: CADA HÁBITO Y SU RELACIÓN CON EL RIESGO ===
+    print("\n Analizando cada hábito individual y su relación con el riesgo de diabetes...")
+
+    #categorías para cada hábito
+    df['Actividad_Fisica_Grupo'] = pd.cut(
+        df['Physical Activity'],
+        bins=[0, 60, 150, 300, 1000],
+        labels=['Sedentario', 'Bajo', 'Moderado', 'Alto']
+    )
+
+    df['Dieta_Grupo'] = pd.cut(
+        df['Diet'],
+        bins=[0, 3, 6, 8, 10],
+        labels=['Mala', 'Regular', 'Buena', 'Excelente']
+    )
+
+    df['Sueño_Grupo'] = pd.cut(
+        df['Sleep Hours'],
+        bins=[0, 6, 7, 8, 24],
+        labels=['Poco (<6h)', 'Subóptimo (6-7h)', 'Óptimo (7-8h)', 'Excesivo (>8h)']
+    )
+
+    df['Alcohol_Grupo'] = pd.cut(
+        df['Alcohol per Week'],
+        bins=[-1, 0, 5, 10, 100],
+        labels=['Abstinente (0)', 'Bajo (1-5)', 'Moderado (6-10)', 'Alto (>10)']
+    )
+
+    df['Pantalla_Grupo'] = pd.cut(
+        df['Screen Time'],
+        bins=[0, 2, 4, 6, 24],
+        labels=['Bajo (<2h)', 'Moderado (2-4h)', 'Alto (4-6h)', 'Muy Alto (>6h)']
+    )
+
+    # Calcular el riesgo promedio por cada categoría de hábito
+    riesgo_habitos = pd.DataFrame({
+        'Actividad Física': df.groupby('Actividad_Fisica_Grupo')['Diabetes Risk Score'].mean().round(2),
+        'Dieta': df.groupby('Dieta_Grupo')['Diabetes Risk Score'].mean().round(2),
+        'Sueño': df.groupby('Sueño_Grupo')['Diabetes Risk Score'].mean().round(2),
+        'Consumo de Alcohol': df.groupby('Alcohol_Grupo')['Diabetes Risk Score'].mean().round(2),
+        'Tiempo de Pantalla': df.groupby('Pantalla_Grupo')['Diabetes Risk Score'].mean().round(2)
+    })
+
+    print("\nRiesgo promedio de diabetes por categoría de cada hábito:")
+    print(riesgo_habitos)
+
+        # === VISUALIZACIÓN COMPARATIVA (MEJORADA) ===
+    print("\n Visualizando relación entre hábitos y riesgo de diabetes (mejorada)...")
+
+    fig, axes = plt.subplots(2, 3, figsize=(16,10))
+    fig.suptitle("Relación entre Estilo de Vida y Riesgo de Diabetes", fontsize=18, fontweight='bold')
+
+    # Lista de configuraciones (columna, título, paleta, posición)
+    habitos = [
+        ('Actividad_Fisica_Grupo', 'Actividad Física', 'YlGnBu', axes[0,0]),
+        ('Dieta_Grupo', 'Calidad de Dieta', 'YlOrBr', axes[0,1]),
+        ('Sueño_Grupo', 'Horas de Sueño', 'PuBu', axes[0,2]),
+        ('Alcohol_Grupo', 'Consumo de Alcohol', 'RdPu', axes[1,0]),
+        ('Pantalla_Grupo', 'Tiempo de Pantalla', 'coolwarm', axes[1,1]),
+    ]
+
+    for col, titulo, paleta, ax in habitos:
+        sns.barplot(
+            data=df,
+            x=col,
+            y='Diabetes Risk Score',
+            estimator=np.mean,
+            palette=paleta,
+            ax=ax
+        )
+
+        # Etiquetas y formato
+        ax.set_title(titulo, fontsize=13, fontweight='bold')
+        ax.set_xlabel("")
+        ax.set_ylabel("Riesgo Promedio" if "Actividad" in titulo or "Alcohol" in titulo else "")
+        ax.tick_params(axis='x', rotation=15)
+        ax.grid(axis='y', linestyle='--', alpha=0.4)
+
+        # === Escala automática ===
+        mean_vals = df.groupby(col)['Diabetes Risk Score'].mean()
+        ax.set_ylim(mean_vals.min() - 1, mean_vals.max() + 1)
+
+        # === Etiquetas numéricas ===
+        for container in ax.containers:
+            ax.bar_label(container, fmt='%.1f', fontsize=9, padding=3)
+
+    # Último subplot vacío
+    axes[1,2].axis('off')
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.show()
 
 if __name__ == "__main__":
     main()
