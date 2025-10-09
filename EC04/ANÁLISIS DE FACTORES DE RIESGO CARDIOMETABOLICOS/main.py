@@ -424,6 +424,30 @@ def main():
         plt.yticks(rotation=0, fontsize=9)
         plt.tight_layout()
         plt.show()
+            # === RIESGO DE DIABETES SEGÚN ESTILO DE VIDA ===
+    print("\nVisualizando riesgo de diabetes según estilo de vida")
+
+    plt.figure(figsize=(8,6))
+    sns.barplot(
+        data=df,
+        x='Habitos_Saludables',
+        y='Diabetes Risk Score',
+        estimator=np.mean,
+        palette=['#e74c3c', '#2ecc71']
+    )
+
+    plt.title('Riesgo de Padecer Diabetes según Estilo de Vida', fontsize=16, fontweight='bold')
+    plt.xlabel('Estilo de Vida', fontsize=13)
+    plt.ylabel('Puntuación Promedio de Riesgo de Diabetes', fontsize=13)
+    plt.xticks(
+        ticks=[0,1],
+        labels=['Hábitos No Saludables', 'Hábitos Saludables'],
+        fontsize=11
+    )
+    plt.grid(axis='y', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
 
 if __name__ == "__main__":
     main()
