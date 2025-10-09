@@ -501,8 +501,8 @@ def main():
     print("\nRiesgo promedio de diabetes por categoría de cada hábito:")
     print(riesgo_habitos)
 
-        # === VISUALIZACIÓN COMPARATIVA (MEJORADA) ===
-    print("\n Visualizando relación entre hábitos y riesgo de diabetes (mejorada)...")
+        # === VISUALIZACIÓN COMPARATIVA  ===
+    print("\n Visualizando relación entre hábitos y riesgo de diabetes ...")
 
     fig, axes = plt.subplots(2, 3, figsize=(16,10))
     fig.suptitle("Relación entre Estilo de Vida y Riesgo de Diabetes", fontsize=18, fontweight='bold')
